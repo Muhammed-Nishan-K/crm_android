@@ -14,10 +14,11 @@ const List<String> leadStatuses = [
   'Not Responded',
   'Rejected',
   'Pending',
+  'On College',
   'Need to Follow Up',
 ]; // leads_list.dart
 Widget buildLeadsList(LeadBloc leadBloc) {
-  List<Lead>? leads;
+  List<Lead> leads = [];
   return BlocBuilder<LeadBloc, LeadState>(
     bloc: leadBloc,
     builder: (context, state) {
@@ -39,16 +40,7 @@ Widget buildLeadsList(LeadBloc leadBloc) {
             borderRadius:
                 BorderRadius.circular(10), // Optional: Rounded corners
           ),
-          child: state is LeadLoaded && leads!.isEmpty ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(CupertinoIcons.doc_text_search,size: Screen.getWidth(context: context)*0.1,color: Colors.white70,),
-              
-              const SizedBox(height: 10,),
-              const Text('No leads available..',style: TextStyle(color: Colors.white70),)
-            ],
-          ) : ListView.builder(
+          child: state is LeadLoading ? buildLeadCardSkeleton(context) : ListView.builder(
             // controller:,
             scrollDirection: Axis.vertical,
             physics: const BouncingScrollPhysics(),
@@ -59,10 +51,10 @@ Widget buildLeadsList(LeadBloc leadBloc) {
 
             shrinkWrap: true, // Allow ListView to take only the space it needs
 
-            itemCount: leads?.length,
+            itemCount: state is LeadLoading ? 2: leads.length ,
 
             itemBuilder: (context, index) {
-              final lead = leads?[index];
+              final lead = leads[index];
 
               return Padding(
                 padding:
@@ -70,7 +62,7 @@ Widget buildLeadsList(LeadBloc leadBloc) {
 
                 child: state is LeadLoading
                     ? buildLeadCardSkeleton(context)
-                    : _buildLeadCard(leadBloc, lead!, context),
+                    : _buildLeadCard(leadBloc, lead, context),
               );
             },
           ),
@@ -118,7 +110,7 @@ Widget _buildLeadCard(LeadBloc leadBloc, Lead lead, BuildContext context) {
                     // Lead Name
                     Text(
                       lead.name ?? 
-                      '',
+                      'NA',
                       style: TextStyle(
                         fontSize: Screen.getWidth(context: context) * 0.04,
                         fontWeight: FontWeight.bold,
@@ -127,7 +119,7 @@ Widget _buildLeadCard(LeadBloc leadBloc, Lead lead, BuildContext context) {
                     ),
                     // Lead course
                     Text(
-                      lead.course ?? '',
+                      lead.course ?? 'NA',
                       style: TextStyle(
                         fontSize: Screen.getWidth(context: context) * 0.03,
                         color: CRMAppColorPallete.textColor,
@@ -140,19 +132,22 @@ Widget _buildLeadCard(LeadBloc leadBloc, Lead lead, BuildContext context) {
               // Close Request Button at the top right
               ElevatedButton.icon(
                 onPressed: () {
+                  if(currentStatus != 'Closed'){
+
                   // Add your close request logic here
                   // leadBloc.add(SendCloseRequest(lead.id)); // Assuming there's an event for this
+                  }
                 },
                 icon: Icon(
                   CupertinoIcons.person_crop_circle_fill_badge_checkmark,
                   color: CRMAppColorPallete.lightBlue,
-                  size: Screen.getWidth(context: context) * 0.06,
+                  size: Screen.getWidth(context: context) * 0.05,
                 ),
                 label: Text(
-                  'Close request',
+                  lead.status != 'Closed' ? 'Close request' : "Closed",
                   style: TextStyle(
                       color: CRMAppColorPallete.lightBlue,
-                      fontSize: Screen.getWidth(context: context) * 0.03),
+                      fontSize: Screen.getWidth(context: context) * 0.025),
                 ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -197,8 +192,11 @@ Widget _buildLeadCard(LeadBloc leadBloc, Lead lead, BuildContext context) {
                     border: Border.all(color: CRMAppColorPallete.boldTextColor),
                     borderRadius: const BorderRadius.all(Radius.circular(12))),
                 child: DropdownButton<String>(
+                  
                   elevation: 0,
                   enableFeedback: false,
+                  iconDisabledColor: Colors.grey,
+                  
                   isExpanded: false,
                   isDense: true,
                   underline: const SizedBox(),
@@ -214,6 +212,7 @@ Widget _buildLeadCard(LeadBloc leadBloc, Lead lead, BuildContext context) {
                   items: leadStatuses
                       .map<DropdownMenuItem<String>>((String status) {
                     return DropdownMenuItem<String>(
+
                       value: status,
                       enabled:
                           status != 'Closed', // Disable the 'Closed' option

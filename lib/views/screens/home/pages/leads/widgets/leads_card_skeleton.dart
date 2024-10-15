@@ -59,6 +59,17 @@ Widget buildLeadCardSkeleton(BuildContext context) {
                   ],
                 ),
               ),
+              
+              // Call Button placeholder
+              Shimmer.fromColors(
+                baseColor: Colors.grey[700]!,
+                highlightColor: Colors.grey[600]!,
+                child: Container(
+                  height: 35.0,
+                  width: Screen.getWidth(context: context) * 0.2,
+                  decoration: BoxDecoration(color: Colors.grey[300],borderRadius: BorderRadius.circular(0.05*120)),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 8.0),

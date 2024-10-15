@@ -28,7 +28,10 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     });
 
     // Filter leads
-    on<ChangeFilter>((event, emit) {
+    on<ChangeFilter>((event, emit) async {
+      emit(
+        LeadLoading(),
+      );
       final lead = [
         Lead(
             id: '2',
@@ -38,6 +41,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
             phone: "987654321",
             status: "Closed")
       ];
+      await Future.delayed(Duration(seconds: 3));
 
       emit(LeadLoaded(leads: lead, selectedFilter: event.filter));
     });

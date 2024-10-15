@@ -15,8 +15,8 @@ Widget buildFilterTabs(LeadBloc leadBloc, LeadState state) {
   String selectedFilter = 'All';
   return BlocBuilder<LeadBloc, LeadState>(
     builder: (context, state) {
+      print(state);
       if (state is LeadLoaded) {
-        
         selectedFilter = state.selectedFilter!;
       }
       return Container(
@@ -45,11 +45,9 @@ Widget buildFilterTabs(LeadBloc leadBloc, LeadState state) {
                           ? Colors.white
                           : Colors.white.withOpacity(0.7)),
                   selected: filter == selectedFilter,
-                  onSelected: (selected) {
+                  onSelected: (selected){
                     if (selected) {
-                      Future.delayed(const Duration(milliseconds: 100), () {
                         leadBloc.add(ChangeFilter(filter));
-                      });
                     }
                   },
                 ),
