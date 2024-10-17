@@ -17,18 +17,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
 
     try {
+      await Future.delayed(Duration(milliseconds: 500));
       // Use the repository to login
-      bool loginSuccess = await authRepo.login(
+      List loginSuccess = await authRepo.login(
         userId: event.userId,
         password: event.password,
       );
-
-      if (loginSuccess) {
+      debugPrint('${loginSuccess[0]} login');
+      if (loginSuccess[0]) {
         emit(const AuthSuccess('Login Successful!'));
       } else {
-        emit(const AuthFailure('Invalid credentials'));
+        debugPrint('I am in the aut eelse case,${loginSuccess}');
+
+        // debugPrint('${loginSuccess[1]} login failed');
+        emit(AuthFailure('${loginSuccess[0]}'));
       }
     } catch (error) {
+      debugPrint('eoor ${error.toString()}');
       emit(AuthFailure('An error occurred: $error'));
     }
   }

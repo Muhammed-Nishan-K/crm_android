@@ -24,9 +24,9 @@ class BlocProviders extends StatelessWidget {
         BlocProvider<NavigationBloc>(
           create: (context) => NavigationBloc(),
         ),
-        // BlocProvider<AuthBloc>(
-        //   create: (context) => AuthBloc(authRepo: AuthRepo()),
-        // ),
+          BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc(authRepo: AuthRepo()),
+          ),
         // Add more BlocProviders here as needed
       ],
       child: child,

@@ -1,4 +1,5 @@
 import 'package:crm_android/dependency_injection.dart';
+import 'package:crm_android/views/screens/auth/login_page.dart';
 import 'package:crm_android/views/screens/home/dashboard_page.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +12,10 @@ class CRMApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const BlocProviders(
+    return  BlocProviders(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: LoginPage(),
       ),
     );
   }

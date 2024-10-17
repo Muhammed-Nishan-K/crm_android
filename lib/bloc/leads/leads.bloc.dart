@@ -14,17 +14,17 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     on<LoadLeads>((event, emit) async {
       emit(LeadLoading());
 
-      // try {
-      //   List<Lead>? leads = await leadsRepo.getLeads();
+      try {
+        List<Lead>? leads = await leadsRepo.getLeads();
 
-      //   if (leads != null) {
-      //     emit(LeadLoaded(leads: leads, selectedFilter: 'All'));
-      //   } else {
-      //     emit(const LeadError("Failed to load leads."));
-      //   }
-      // } catch (e) {
-      //   emit(LeadError("An error occurred: $e"));
-      // }
+        if (leads != null) {
+          emit(LeadLoaded(leads: leads, selectedFilter: 'All'));
+        } else {
+          emit(const LeadError("Failed to load leads."));
+        }
+      } catch (e) {
+        emit(LeadError("An error occurred: $e"));
+      }
     });
 
     // Filter leads
@@ -41,7 +41,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
             phone: "987654321",
             status: "Closed")
       ];
-      await Future.delayed(Duration(seconds: 3));
+      // await Future.delayed(Duration(seconds: 3));
 
       emit(LeadLoaded(leads: lead, selectedFilter: event.filter));
     });

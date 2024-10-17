@@ -12,9 +12,9 @@ Widget buildFilterTabs(LeadBloc leadBloc, LeadState state) {
     'Need to Follow Up',
     'Rejected'
   ];
-  String selectedFilter = 'All';
   return BlocBuilder<LeadBloc, LeadState>(
     builder: (context, state) {
+      String selectedFilter = 'All';
       print(state);
       if (state is LeadLoaded) {
         selectedFilter = state.selectedFilter!;
@@ -41,13 +41,16 @@ Widget buildFilterTabs(LeadBloc leadBloc, LeadState state) {
                   selectedColor: CRMAppColorPallete.dropdownText,
                   label: Text(filter),
                   labelStyle: TextStyle(
-                      color: filter == selectedFilter
-                          ? Colors.white
-                          : Colors.white.withOpacity(0.7)),
+                    color: filter == selectedFilter
+                        ? Colors.white
+                        : Colors.white70,
+                  ),
                   selected: filter == selectedFilter,
-                  onSelected: (selected){
+                  onSelected: (selected) {
                     if (selected) {
-                        leadBloc.add(ChangeFilter(filter));
+                      print(filter);
+                      print(selectedFilter);
+                      leadBloc.add(ChangeFilter(filter));
                     }
                   },
                 ),
